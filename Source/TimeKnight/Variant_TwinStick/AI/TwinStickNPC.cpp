@@ -119,6 +119,25 @@ void ATwinStickNPC::ProjectileImpact(const FVector& ForwardVector)
 	GetWorld()->GetTimerManager().SetTimer(DestructionTimer, this, &ATwinStickNPC::DeferredDestroy, DeferredDestructionTime, false);
 }
 
+float ATwinStickNPC::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	const float Applied = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	if (DamageAmount > 0.0f)
+	{
+		// push direction: away from whatever hit us
+		FVector Direction = GetActorForwardVector();
+		if (DamageCauser)
+		{
+			Direction = (GetActorLocation() - DamageCauser->GetActorLocation()).GetSafeNormal2D();
+		}
+
+		ProjectileImpact(Direction);
+	}
+
+	return Applied;
+}
+
 void ATwinStickNPC::DeferredDestroy()
 {
 	// destroy this actor

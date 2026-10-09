@@ -74,6 +74,9 @@ public:
 	/** Tells the NPC to process a projectile impact */
 	void ProjectileImpact(const FVector& ForwardVector);
 
+	/** Standard Unreal damage (e.g. the paladin's sword via UGameplayStatics::ApplyDamage) kills the NPC the same way a projectile does */
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 protected:
 
 	/** Called from timer to complete the destruction process for this NPC */
